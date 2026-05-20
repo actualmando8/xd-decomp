@@ -1,80 +1,43 @@
-// Decompiled from time.cpp (0x8000E8CC - 0x8000E97C)
-// PowerPC 750CL / Gekko CPU - Metrowerks CodeWarrior
-// Calling convention: r3-r7 args, r3 return, LR saved on stack
+// Decompiled from: time.cpp
+// Address range: 0x8000E8CC..0x8000E97C | size: 0xB0
 
-#include "system.h"
+/* Forward declarations */
+s32   pauseIsPause(void);
+f32   GSgfxVideoGetLastRenderTime(void);
+s32   GSgfxVideoGetVsyncRate(void);
+u32   __cvt_fp2unsigned(f32 f);
 
-// ============================================================
-// Global variables (sdata2)
-// ============================================================
-
-// Float constant: 0.0f (for pause return value)
-static const float float_zero = 0.0f;
-
-// Double constant: 2.0 (for vscale calculation)
-static const double double_two = 2.0;
-
-// Float constant: 0.5f (for frame time offset)
-static const float float_half = 0.5f;
-
-// ============================================================
-// Forward declarations
-// ============================================================
-extern u32 pauseIsPause(void);
-extern float GSgfxVideoGetLastRenderTime(void);
-extern u32 GSgfxVideoGetVsyncRate(void);
-extern u32 __cvt_fp2unsigned(float value);
-
-// ============================================================
-// Function implementations
-// ============================================================
+/* SData2 */
+static const f32 _Zero = 0.0f;
+static const f64 _One = 1.0;
+static const f32 _Half = 0.5f;
 
 /*
- * timeGetLastFrameTime
- * Original address: 0x8000E8CC
- * Size: 0x44 bytes
- * 
- * Gets the time of the last frame in milliseconds.
- * Returns 0 if the game is paused.
- * 
- * @return  Last frame time in milliseconds
- */
+  Address: 0x8000E8CC | size: 0x44
+  timeGetLastFrameTime(void)
+  Returns the last frame time in milliseconds.
+  If paused, returns 0. Otherwise, adds 0.5 to render time and converts to unsigned int.
+*/
 u32 timeGetLastFrameTime(void) {
-    if (pauseIsPause() != 0) {
+    if (pauseIsPause()) {
         return 0;
     }
-    
-    float lastTime = GSgfxVideoGetLastRenderTime();
-    lastTime += 0.5f;  // Add 0.5 for rounding
-    
-    return (u32)lastTime;
+    f32 renderTime = GSgfxVideoGetLastRenderTime();
+    return __cvt_fp2unsigned(renderTime + _Half);
 }
 
 /*
- * timeGetLastFrameSec
- * Original address: 0x8000E910
- * Size: 0x6C bytes
- * 
- * Gets the time of the last frame in seconds.
- * Returns 0 if the game is paused.
- * 
- * Uses vsync rate to calculate frame duration.
- * 
- * @return  Last frame time in seconds (floating point)
- */
-float timeGetLastFrameSec(void) {
-    if (pauseIsPause() != 0) {
-        return 0.0f;
+  Address: 0x8000E910 | size: 0x6C
+  timeGetLastFrameSec(void)
+  Returns the last frame time in seconds.
+  If paused, returns 0. Otherwise, calculates 1.0 / (vsyncRate - lastRenderTime).
+*/
+f32 timeGetLastFrameSec(void) {
+    if (pauseIsPause()) {
+        return _Zero;
     }
-    
-    u32 vsyncRate = GSgfxVideoGetVsyncRate();
-    
-    // Calculate: 2.0 / vsyncRate
-    // The assembly stores vsyncRate and the constant 2.0, then subtracts to get divisor
-    double vsyncDouble = (double)vsyncRate;
-    double divisor = 2.0 - vsyncDouble;
-    
-    float lastTime = GSgfxVideoGetLastRenderTime();
-    
-    return (float)(2.0 / divisor);
+    s32 vsyncRate = GSgfxVideoGetVsyncRate();
+    f64 renderTime = GSgfxVideoGetLastRenderTime();
+    f64 diff = (f64)vsyncRate - renderTime;
+    return 1.0f / (f32)diff;
 }

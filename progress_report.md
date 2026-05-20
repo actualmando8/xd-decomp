@@ -40,6 +40,72 @@ Initial analysis phase begun. Focusing on:
 
 ## Progress Updates
 
+[2026-05-20 00:24 EDT] - Batch decompilation session (3 files, 15 functions)
+Completed:
+- [`menuMoveDemo.cpp`](src/game/menuMoveDemo.cpp) - 10 functions (kyogreMoveDemo class methods, menuMoveDemo entry/exit/init/main)
+- [`relglobal.c`](src/game/relglobal.c) - Global data declarations (all game data pointers)
+- [`menuToolBattle.cpp`](src/game/menuToolBattle.cpp) - 8 functions (tool battle menu with flash animations)
+- [`menuCB_BattleStart.cpp`](src/game/menuCB_BattleStart.cpp) - 14 functions (battle start initialization, trainer face loading)
+
+[2026-05-20 23:22 EDT] - Batch decompilation session (12 files, 38 functions)
+
+[2026-05-20 00:53 EDT] - Batch decompilation session (2 files, 25 functions)
+Completed:
+- [`gbaPokemon.cpp`](src/game/gbaPokemon.cpp) - 8 functions (gbaPokemonFromGC, gbaPokemonToGC, gbaPokemonConditonFromGC, gbaPokemonConditonToGC, _rotatepp, _revrotatepp, _swap32, _swap16)
+- [`menuCB_Bios.cpp`](src/game/menuCB_Bios.cpp) - 25 functions (menuCB_SetToolBattleModeFlag, menuCB_GetToolBattleModeFlag, menuCB_GetBattleController2P, menuCB_RuleTitleNameGet, menuCBTrainerBios_GetPlayerID, menuCBTrainerBios_SetHomePlace, menuCBTrainerBios_GetHomePlace, menuCBBios_CopyTrainer, menuCBTrainerBios_GetControlerID, menuCBTrainerBios_SetControlerID, menuCBBios_InitVersusTrainer, menuCBBios_InitTrainerFromHero, menuCBBios_InitTrainerFromDataID, menuCBBios_ClearTrainer, menuCBBios_InitTrainer, menuCBBios_FightTrainerDataIDToHomePlace, menuCBBios_GetTrainerFromVersusBattleID, menuCBBios_GetToolBattleTrainerKind, menuCBBios_GetRegisteredHero, menuCBBios_GetTrainer, menuCBBios_GetTrainerOrgImmediately, menuCBBios_GetTrainerImmediately, menuCBBios_GetHeroImmediately, _menuCBBios_RecoverAllPokemons, menuCBBios_ControlerIDtoPortID, menuCBBios_PortIDtoControlerID, menuCBBios_ParticipationPokemonMax, menuCBBios_CurrentRuleType, menuCBBios_CurrentRule, menuCBBios_GetRule, menuCBBios_RuleConstRuleSet, menuCBBios_RuleEditSaveON, menuCBBios_CurrentlyWorkingToolBattleSet, menuCBBios_CurrentlyWorkingToolBattle, menuCBBios_WorkContext, menuCBBios_InitContext, menuCB_RULE_INIT, menuCBBios_InitContextAtFirst)
+
+[2026-05-20 01:34 EDT] - Batch decompilation (4 files, 18 functions)
+Completed:
+- [`menuCB_Rule.cpp`](src/game/menuCB_Rule.cpp) - 30+ functions (rule checking system: error flags, regulation checks, Pokemon validation, legendary checks, item validation, time limits, skill enable/disable)
+- [`dbgMenuItemCreate.cpp`](src/game/dbgMenuItemCreate.cpp) - 4 functions (nbItemCtrl, itemNameCtrl, menuDbgItemCreateCursor, menuDbgItemCreate)
+- [`dbgMenuSoundTest.cpp`](src/game/dbgMenuSoundTest.cpp) - 7 functions (dbgMenuSoundTestChangeSE, dbgMenuSoundTestChangeBGM, dbgMenuSoundTestNAKIGOE, dbgMenuSoundTestSE, dbgMenuSoundTestENV, dbgMenuSoundTestBGM, sndPlay)
+- [`dbgMenuFlag.cpp`](src/game/dbgMenuFlag.cpp) - 9 functions (dbgMenuFlagInfoDraw, dbgMenuFlagInfoCursor, _dbgMenuFlagInfoGetMsg, _dbgMenuFlagGetID, dbgMenuFlagCursor, dbgMenuFlagCheck, dbgMenuFlagSetEtc, _dbgMenuFlagGetMenuNum)
+
+Progress: ~71/114 files decompiled (~62% complete)
+Next steps: Continue with remaining assembly files (dbgMenuFight, dbgMenuFightTrainer, dbgMenuMenu, dbgMenuPokemon, dbgMenuSub, menuBattleDisk, menuBingo, menuCB_externDB, menuCB_Rule, menuCB_Sub1, menuColosseumBattle, menuData, menuFightStatus, menuHologram, menuItemBT, menuItemDebugRelease, menuItemMX, menuItemPda, menuItemTool, menuItemXD, menuLogoDemo, menuNameEntry, menuOrreColosseum, menuPanel, menuPcBoxDouguNew, menuPcBoxNew, menuPcBoxPokemon, menuPda, menuPdaDPMonitor, menuPdaDPMonitorList, menuPdaMailList.XD, menuPdaMemoListXD, menuPdaMemoWaveXD, menuPdaMemoXD, menuPdaSearcher, menuPocket, menuPocketBattleDisk, menuPocketTool, menuPokemon, menuPokemonChange, menuPokemonStatus, menuReliveHall, menuReliveHallTutorial, menuReliveMeter, menuScript, menuSeq, menuShop, menuSprite, menuSub, menuTitle, menuUseItem, menuWorldMapModel, menuWorldMapMX)
+Completed:
+- [`floorLayerConfig.cpp`](src/game/floorLayerConfig.cpp) - 3 functions + static init (layer config loading, floor configuration)
+- [`character.cpp`](src/game/character.cpp) - 1 stub function
+- [`menuKeyDisc.cpp`](src/game/menuKeyDisc.cpp) - 3 functions (key disc menu)
+- [`menuCB_Debug.cpp`](src/game/menuCB_Debug.cpp) - 1 function (AGB connection skip flag)
+- [`menuTool.cpp`](src/game/menuTool.cpp) - 2 functions (tool selection)
+- [`dbgMenuWazaViewer.cpp`](src/game/dbgMenuWazaViewer.cpp) - 6 functions (waza viewer display options)
+- [`menuColosseumBattleConnection.cpp`](src/game/menuColosseumBattleConnection.cpp) - 3 functions (colosseum battle connection)
+- [`dbgMenuRelive.cpp`](src/game/dbgMenuRelive.cpp) - 1 function (debug relive)
+- [`dbgMenuGSgfx.cpp`](src/game/dbgMenuGSgfx.cpp) - 2 functions (GSgfx debug menu)
+- [`menuItem.c`](src/game/menuItem.c) - Data table (menu item config)
+- [`dbgMenuPeople.cpp`](src/game/dbgMenuPeople.cpp) - 2 functions (people debug menu)
+- [`dbgMenuFieldCamera.cpp`](src/game/dbgMenuFieldCamera.cpp) - 1 function (field camera debug)
+- [`dbgMenuCamera.cpp`](src/game/dbgMenuCamera.cpp) - 3 functions (camera debug menu)
+- [`time.cpp`](src/game/time.cpp) - 2 functions (frame time calculations)
+- [`menuCB_ItemList.cpp`](src/game/menuCB_ItemList.cpp) - Data table (item tool battle list)
+- [`dbgMenuToolBattle.cpp`](src/game/dbgMenuToolBattle.cpp) - 5 functions (tool battle debug)
+- [`menuPokeCoupon.cpp`](src/game/menuPokeCoupon.cpp) - 3 functions (poke coupon menu)
+- [`dbgMenuMsg.cpp`](src/game/dbgMenuMsg.cpp) - 2 functions (message debug)
+- [`pokeconv.cpp`](src/game/pokeconv.cpp) - 2 functions (GBA to GC Pokemon conversion)
+- [`dbgMenuWaza.cpp`](src/game/dbgMenuWaza.cpp) - 5 functions (waza debug menu)
+- [`pause.cpp`](src/game/pause.cpp) - 5 functions (pause system)
+
+Progress: 64/114 files decompiled (~56%)
+
+[2026-05-20 22:14 EDT] - Batch decompilation session (3 files, 30 functions)
+Completed:
+- [`menuCB_Battle.cpp`](src/game/menuCB_Battle.cpp) - 3 functions (battle callback entry, init, and stub)
+- [`menuCB_Common.cpp`](src/game/menuCB_Common.cpp) - 9 functions (message display, menu stack management, GBA disconnect detection)
+- [`menuCB_PokemonEntry.cpp`](src/game/menuCB_PokemonEntry.cpp) - 18 functions (Pokemon entry flow, Deoxys param customization, button input handling, face loading)
+
+[2026-05-19 00:54 EDT] - Batch decompilation session (6 files, 59 functions)
+
+Completed:
+- [`dbgMenuHero.cpp`](src/game/dbgMenuHero.cpp) - 10 functions (hero debug menu commands)
+- [`menuPdaSub.cpp`](src/game/menuPdaSub.cpp) - 5 functions (PDA sub-menu helpers)
+- [`menuDataBios.cpp`](src/game/menuDataBios.cpp) - 14 functions (menu bios data accessors)
+- [`menuPdaMailXD.cpp`](src/game/menuPdaMailXD.cpp) - 10 functions (PDA mail viewer)
+- [`dbgMenuMemcard.cpp`](src/game/dbgMenuMemcard.cpp) - 6 functions (memory card debug)
+- [`menuInterrupt.cpp`](src/game/menuInterrupt.cpp) - 14 functions (interrupt icons, UnderTaker)
+
+Next steps: Continue with menuSaveLoad.s, menuCB_BattleResult.s, and remaining files.
+
 [2026-05-18 13:00 EDT] - gbaPokemon.cpp Decompilation Complete
 
 Completed:
@@ -400,3 +466,59 @@ Notes:
 - Largest file decompiled so far (8980 lines of assembly)
 - Uses multiple jump tables: @4959 (5 entries), @5374 (28 entries), @5493 (8 entries), @5529 (26 entries), @5602 (7 entries), @5650 (7 entries)
 - Full decompilation deferred due to size; stubs provide buildable framework
+
+[2026-05-19 00:00 EDT] - Batch: Small menu and debug files decompiled
+
+Completed:
+- [`menuKeyDiscExit()`](src/game/menuKeyDisc.cpp) - Empty stub (0x8000E71C)
+- [`menuKeyDiscMain()`](src/game/menuKeyDisc.cpp) - Key disc resource loader (0x8000E720)
+- [`menuKeyDiscInit()`](src/game/menuKeyDisc.cpp) - Empty stub (0x8000E748)
+- [`menuToolSetSelect()`](src/game/menuTool.cpp) - Set tool selection (0x8000C284)
+- [`menuToolInit()`](src/game/menuTool.cpp) - Clear tool selection (0x8000C28C)
+- [`menuPokeCouponExit()`](src/game/menuPokeCoupon.cpp) - Reset coupon work state (0x8000E5AC)
+- [`menuPokeCouponMain()`](src/game/menuPokeCoupon.cpp) - Open coupon shop (0x8000E5B8)
+- [`menuPokeCouponInit()`](src/game/menuPokeCoupon.cpp) - Assert work state (0x8000E60C)
+- [`menuColosseumBattleConnectionExit()`](src/game/menuColosseumBattleConnection.cpp) - Empty stub (0x8000C298)
+- [`menuColosseumBattleConnectionMain()`](src/game/menuColosseumBattleConnection.cpp) - Toggle main exec (0x8000C29C)
+- [`menuColosseumBattleConnectionInit()`](src/game/menuColosseumBattleConnection.cpp) - Clear main exec (0x8000C2B4)
+- [`menuCBDebug_SkipAGBConnection()`](src/game/menuCB_Debug.cpp) - Set debug flag (0x8004A090)
+- [`dbgMenuWazaViewerChangeDisp()`](src/game/dbgMenuWazaViewer.cpp) - Stub returning 0 (0x8000C0C4)
+- [`dbgMenuWazaViewerChangeRenderBoundingBox()`](src/game/dbgMenuWazaViewer.cpp) - Stub (0x8000C0CC)
+- [`dbgMenuWazaViewerChangeBackgroundVisibility()`](src/game/dbgMenuWazaViewer.cpp) - Stub (0x8000C0D4)
+- [`dbgMenuWazaViewerChangeShowStatusInfo()`](src/game/dbgMenuWazaViewer.cpp) - Stub (0x8000C0DC)
+- [`dbgMenuWazaViewerChangeDoCameraUpdate()`](src/game/dbgMenuWazaViewer.cpp) - Stub (0x8000C0E4)
+- [`dbgMenuWazaViewerChangeRenderNullJoints()`](src/game/dbgMenuWazaViewer.cpp) - Stub (0x8000C0EC)
+- [`dbgMenuRelive()`](src/game/dbgMenuRelive.cpp) - Dark Pokemon relive trigger (0x8000E53C)
+- [`dbgMenuGSgfxChangeDisp()`](src/game/dbgMenuGSgfx.cpp) - Toggle GSgfx menu (0x8000B344)
+- [`dbgMenuLayerFifoDisp()`](src/game/dbgMenuGSgfx.cpp) - Toggle stats render mode (0x8000B3B4)
+- [`_menu_item`](src/game/menuItem.c) - Data table (0x803CD2F0)
+- [`dbgMenuDispChangePartyInfo()`](src/game/dbgMenuPeople.cpp) - Toggle party info menu (0x8000BC28)
+- [`dbgMenuPeopleOpenEdit()`](src/game/dbgMenuPeople.cpp) - Toggle people edit menu (0x8000BC98)
+- [`dbgMenuFieldCameraChangeDisp()`](src/game/dbgMenuFieldCamera.cpp) - Toggle field camera editor (0x8000E154)
+- [`dbgMenuCameraResetFloor()`](src/game/dbgMenuCamera.cpp) - Reset floor camera (0x800056A4)
+- [`dbgMenuCameraChangeDisp()`](src/game/dbgMenuCamera.cpp) - Toggle camera menu (0x800056C8)
+- [`dbgMenuCameraSetType()`](src/game/dbgMenuCamera.cpp) - Set camera type (0x80005738)
+- [`itemtoolbattle`](src/game/menuCB_ItemList.cpp) - Battle tool item list (0x8032EB08)
+- [`itemtoolbattle_number`](src/game/menuCB_ItemList.cpp) - Item count (0x804E7F58)
+- [`dbgMenuGBAClearCouponFlag()`](src/game/dbgMenuToolBattle.cpp) - Clear coupon flag (0x8000E64C)
+- [`dbgMenuGBASetClearFlag()`](src/game/dbgMenuToolBattle.cpp) - Set clear flag (0x8000E668)
+- [`dbgMenuGBAResetCoupon()`](src/game/dbgMenuToolBattle.cpp) - Reset coupon (0x8000E67C)
+- [`dbgMenuGBAAddCoupon()`](src/game/dbgMenuToolBattle.cpp) - Add coupon value (0x8000E698)
+- [`dbgToolBattleDebugSetAGBConnectionMode()`](src/game/dbgMenuToolBattle.cpp) - Set AGB connection mode (0x8000E6EC)
+- [`dbgMenuMsgTest()`](src/game/dbgMenuMsg.cpp) - Message window test dispatcher (0x8000BAE4)
+- [`dbgMenuMsgCheck()`](src/game/dbgMenuMsg.cpp) - Message check with number input (0x8000BBB0)
+- [`pokeconv()`](src/game/pokeconv.cpp) - GBA save to GC hero converter (0x8006C184)
+- [`_swap32__FUl()`](src/game/pokeconv.cpp) - 32-bit byte swap (0x8006C2F8)
+
+Next steps:
+- Continue with next batch of small files: dbgMenuLog.s, flashmenuTest.s, dbgMenuFightWaza.s
+- Then medium files: menuMewWaza.s, dbgMenuGSvtr.s, menuWorldMapMoveDemo.s
+- Then larger files: menuCB_Common.s, dbgMenuItemCreate.s, dbgMenuSoundTest.s
+
+Notes:
+- 11 new source files created in this batch (38 functions total)
+- pokeconv.cpp implements the full GBA save data conversion pipeline
+- Home place mapping: GBA places 1→1, 2→2, 3→2, 4→3, 5→3, other→1
+- Debug menu files follow a toggle pattern (check if menu open → close, else open)
+- dbgMenuMsgTest() dispatches on testId: 0=fade+error msg, 1=close fight+error, 2=thread switch, 3-4=msgctrl
+- menuCB_ItemList.cpp contains the battle tool item ID list (63 items)

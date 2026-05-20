@@ -1,137 +1,88 @@
-// Decompiled from pause.cpp (0x8000E794 - 0x8000E8CC)
-// PowerPC 750CL / Gekko CPU - Metrowerks CodeWarrior
-// Calling convention: r3-r7 args, r3 return, LR saved on stack
+// Decompiled from: pause.cpp
+// Address range: 0x8000E794..0x8000E8CC | size: 0x138
 
-#include "system.h"
+/* Forward declarations */
+void GSgfxRenderUnpause(void);
+void GSsndPopVolumeALL(s32 a, s32 b, s32 c);
+void GSgappPauseOff(void);
+void GSsndContinue(s32 id, s32 a, s32 b);
+void GSmovieAllContinue(void);
+void GSgfxRenderPause(void);
+void GSsndPushVolumeALL(s32 a, s32 b, s32 c, s32 d);
+void GSgappPauseOn(void);
+s32  soundGetBGMID(void);
+void GSsndPause(s32 id, s32 a, s32 b);
+void GSmovieAllPause(void);
+s32  GSgappCreate(s32 a, void* b, s32 c, void* d);
 
-// ============================================================
-// Global variables (sbss)
-// ============================================================
-
-// _pauseFlag - Current pause state (0 = running, 1 = paused)
+/* SBSS */
 static u8 _pauseFlag;
-
-// _enablePauseFlag - Enable/disable pause functionality
 static u8 _enablePauseFlag;
-
-// _sound_id - Currently playing sound ID (for pause/resume)
-static u32 _sound_id;
-
-// _gappPadReadHandle - GAPP handle for pause daemon
-static u32 _gappPadReadHandle;
-
-// ============================================================
-// Forward declarations
-// ============================================================
-extern void GSgfxRenderUnpause(void);
-extern void GSsndPopVolumeALL(u32 p1, u32 p2, u32 p3);
-extern void GSgappPauseOff(void);
-extern void GSsndContinue(u32 id, u32 p2, u32 p3);
-extern void GSmovieAllContinue(void);
-extern void GSgfxRenderPause(void);
-extern void GSsndPushVolumeALL(u32 p1, u32 p2, u32 p3, u32 p4);
-extern void GSgappPauseOn(void);
-extern u32 soundGetBGMID(void);
-extern void GSsndPause(u32 id, u32 p2, u32 p3);
-extern void GSmovieAllPause(void);
-extern u32 GSgappCreate(u32 p1, u32 p2, u32 p3, void* func);
-
-// ============================================================
-// Function implementations
-// ============================================================
+static s32 _sound_id;
+static s32 _gappPadReadHandle;
 
 /*
- * pauseIsPause
- * Original address: 0x8000E794
- * Size: 0x8 bytes
- * 
- * Returns the current pause state.
- * 
- * @return  0 if running, non-zero if paused
- */
+  Address: 0x8000E880 | size: 0x4
+  pauseDaemon(u32, u32)
+  Stub daemon function for pause system.
+*/
+void pauseDaemon__FUlUl(u32, u32) {
+    // Stub
+}
+
+/*
+  Address: 0x8000E794 | size: 0x8
+  pauseIsPause(void)
+  Returns the current pause flag.
+*/
 u8 pauseIsPause(void) {
     return _pauseFlag;
 }
 
 /*
- * pauseOff
- * Original address: 0x8000E79C
- * Size: 0x68 bytes
- * 
- * Resumes the game from paused state.
- * Restores rendering, sound volume, GAPP threads, BGM, and movies.
- */
+  Address: 0x8000E79C | size: 0x68
+  pauseOff(void)
+  Turns off pause mode, resuming rendering, sound, and movies.
+*/
 void pauseOff(void) {
-    if (_pauseFlag == 0) {
-        return;
+    if (_pauseFlag) {
+        _pauseFlag = 0;
+        GSgfxRenderUnpause();
+        GSsndPopVolumeALL(0, 0, 1);
+        GSgappPauseOff();
+        if (_sound_id + 1 != 0xFFFF) {
+            GSsndContinue(_sound_id, 0x32, 0);
+        }
+        GSmovieAllContinue();
     }
-    
-    _pauseFlag = 0;
-    GSgfxRenderUnpause();
-    GSsndPopVolumeALL(0, 0, 1);
-    GSgappPauseOff();
-    
-    // Resume BGM if valid sound ID
-    if ((_sound_id & 0xFFFF0000) != 0xFFFF0000) {
-        GSsndContinue(_sound_id, 0x32, 0);
-    }
-    
-    GSmovieAllContinue();
 }
 
 /*
- * pauseOn
- * Original address: 0x8000E804
- * Size: 0x7C bytes
- * 
- * Pauses the game.
- * Saves BGM ID, pauses rendering, sound, GAPP threads, and movies.
- */
+  Address: 0x8000E804 | size: 0x7C
+  pauseOn(void)
+  Turns on pause mode, pausing rendering, sound, and movies.
+*/
 void pauseOn(void) {
-    if (_pauseFlag != 0) {
-        return;
+    if (!_pauseFlag && _enablePauseFlag) {
+        _pauseFlag = 1;
+        GSgfxRenderPause();
+        GSsndPushVolumeALL(0, 0, 0, 1);
+        GSgappPauseOn();
+        _sound_id = soundGetBGMID();
+        if (_sound_id + 1 != 0xFFFF) {
+            GSsndPause(_sound_id, 0x32, 0);
+        }
+        GSmovieAllPause();
     }
-    
-    if (_enablePauseFlag == 0) {
-        return;
-    }
-    
-    _pauseFlag = 1;
-    GSgfxRenderPause();
-    GSsndPushVolumeALL(0, 0, 0, 1);
-    GSgappPauseOn();
-    
-    // Save and pause BGM
-    _sound_id = soundGetBGMID();
-    if ((_sound_id & 0xFFFF0000) != 0xFFFF0000) {
-        GSsndPause(_sound_id, 0x32, 0);
-    }
-    
-    GSmovieAllPause();
 }
 
 /*
- * _pauseDaemon
- * Original address: 0x8000E880
- * Size: 0x4 bytes
- * 
- * Empty stub for pause daemon thread
- */
-static void _pauseDaemon__FUlUl(u32 param1, u32 param2) {
-    // Empty stub
-}
-
-/*
- * pauseInit
- * Original address: 0x8000E884
- * Size: 0x48 bytes
- * 
- * Initializes the pause system.
- * Creates a GAPP thread for the pause daemon.
- */
+  Address: 0x8000E884 | size: 0x48
+  pauseInit(void)
+  Initializes the pause system.
+*/
 void pauseInit(void) {
     _pauseFlag = 0;
     _enablePauseFlag = 1;
-    
-    _gappPadReadHandle = GSgappCreate(1, 0, 0, _pauseDaemon__FUlUl);
+    _gappPadReadHandle = GSgappCreate(1, pauseDaemon__FUlUl, 0, 0);
 }
