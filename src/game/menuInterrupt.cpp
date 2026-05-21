@@ -1,328 +1,266 @@
-// Decompiled from: menuInterrupt.cpp
-// Address range: 0x800665F4..0x80066C48 | size: 0x654
+// Decompilation of menuInterrupt.cpp
+// Original address: 0x800665F4..0x80066C48 | size: 0x654
+// Functions: 12
 
-/* Forward declarations */
-s32     menuIsCheck(s32 menuId);
-void    menuClose(s32 menuId);
-void    menuCloseSync(s32 menuId, s32 sync);
-s32     menuOpenCustom(s32 menuId, s32 a, s32 b, s32 c, s32 d, s32* e);
-s32     winSpriteGetLayerID(void* winSprite);
-void*   GSgfxLayerFindByID(s32 id);
-void*   GSfloorGetCurrent(void);
-void*   floorDataBiosGetPtr(void* floor);
-s32     floorDataBiosGetFloorKind(void* floorData);
-s32     GSflagTest(s32 flag);
-void    winSpriteSetDisp(void* winSprite, s32 disp);
-void    menuButtonNormal(void* winWork);
-s32     winSeqCheckMove(void* winWork, s32 seq);
-void    winSeqSetMenu(void* winWork, s32 seq);
-void    GSsndPlayNow(s32 sndId);
-void    GSinputMotorStart(s32 a, s32 b, s32 c, s32 d, s32 e);
-void*   gamedatasaveGetStatus(s32 a, s32 b);
-float   cos(float x);
-float   timeGetLastFrameSec(void);
+#include "global.h"
 
-/* Constants for alpha calculation */
-static const float TWO_PI = 6.2831855f;
-static const float PERIOD = 1.5f;
-static const float ALPHA_SCALE = 300.0f;
-static const float ONE = 1.0f;
-static const float HALF = 0.5f;
+// Forward declarations
+void menuIsCheck(void);
+void menuClose(int menuId);
+void menuCloseSync(int menuId, int sync);
+void menuOpenCustom(int menuId, int param4, int param5, int param6, int param7, int param8, int param9);
+int winSpriteGetLayerID(void* spriteWork);
+void* GSgfxLayerFindByID(int id);
+void* GSfloorGetCurrent(void);
+void* floorDataBiosGetPtr(void);
+int floorDataBiosGetFloorKind(void);
+int GSflagTest(int flagId);
+void winSpriteSetDisp(void* spriteWork, int disp);
+void winSeqSetMenu(int seqId, int menuId);
+int winSeqCheckMove(int seqId);
+void menuButtonNormal(void* windowWork);
+void GSsndPlayNow(int soundId);
+void* gamedatasaveGetStatus(int param1, int param2);
+void GSinputMotorStart(int param1, int param2, int param3, int param4, int param5);
+float timeGetLastFrameSec(void);
+float cos(float x);
 
-/* Global state */
-static u8 _menuIntVibFlag = 1;
-static u8 _underTakerIconFlag = 1;
-static float _menuIntFrameCount;
-static float _menuIntFrameCount2;
-
+// Global variables (from .sda21 references)
+extern u8 _menuIntVibFlag;
+extern u8 _underTakerIconFlag;
+extern float _menuIntFrameCount;
+extern float _menuIntFrameCount2;
 extern void* undertakerdata;
 
-/*
-  Address: 0x800665F4 | size: 0x5C
-  menuIntUnderTakerOpenIcon()
-  Toggles UnderTaker icon menu (0xC1). If open, closes it. If closed, opens it.
-*/
-void menuIntUnderTakerOpenIcon(void) {
-    if (menuIsCheck(0xC1)) {
-        menuClose(0xC1);
+// Floating point constants
+static const float @2178 = 6.2831855f;   // 2*PI
+static const float @2179 = 3.1415927f;   // PI
+static const float @2180 = 127.5f;
+static const float @2181 = 1.0f;
+static const float @2182 = 2.0f;
+
+/* 0x800665F4 | size: 0x5C */
+// Opens icon menu 0xC1 if not already open
+void menuIntUnderTakerOpenIcon(void)
+{
+    if (menuIsCheck()) {
+        menuClose(0xc1);
     } else {
-        menuOpenCustom(0xC1, 0, 0, 0, 1, 0);
+        menuOpenCustom(0xc1, 0x0, 0x0, 0x0, 0x1, 0x0, 0);
     }
 }
 
-/*
-  Address: 0x80066650 | size: 0x44
-  menuIntUnderTakerMenuClose()
-  Closes UnderTaker icon menu with sync.
-*/
-void menuIntUnderTakerMenuClose(void) {
-    if (menuIsCheck(0xC1)) {
-        menuClose(0xC1);
-        menuCloseSync(0xC1, 1);
+/* 0x80066650 | size: 0x44 */
+// Closes icon menu 0xC1 with sync
+void menuIntUnderTakerMenuClose(void)
+{
+    if (menuIsCheck()) {
+        menuClose(0xc1);
+        menuCloseSync(0xc1, 0x1);
     }
 }
 
-/*
-  Address: 0x80066694 | size: 0x44
-  menuIntUnderTakerMenuOpen()
-  Opens UnderTaker icon menu and sets vibration flag.
-*/
-void menuIntUnderTakerMenuOpen(void) {
-    _menuIntVibFlag = 1;
-    menuOpenCustom(0xC1, 0, 0, 0, 1, 0);
+/* 0x80066694 | size: 0x44 */
+// Opens icon menu 0xC1 and sets vibration flag
+void menuIntUnderTakerMenuOpen(void)
+{
+    _menuIntVibFlag = 0x1;
+    menuOpenCustom(0xc1, 0x0, 0x0, 0x0, 0x1, 0x0, 0);
 }
 
-/*
-  Address: 0x800666D8 | size: 0xC
-  menuIntUnderTakerDispIconRestore2()
-  Enables UnderTaker icon display.
-*/
-void menuIntUnderTakerDispIconRestore2(void) {
-    _underTakerIconFlag = 1;
+/* 0x800666D8 | size: 0xC */
+// Restores UnderTaker icon display flag
+void menuIntUnderTakerDispIconRestore2(void)
+{
+    _underTakerIconFlag = 0x1;
 }
 
-/*
-  Address: 0x800666E4 | size: 0xC
-  menuIntUnderTakerDispIconOff2()
-  Disables UnderTaker icon display.
-*/
-void menuIntUnderTakerDispIconOff2(void) {
-    _underTakerIconFlag = 0;
+/* 0x800666E4 | size: 0xC */
+// Turns off UnderTaker icon display flag
+void menuIntUnderTakerDispIconOff2(void)
+{
+    _underTakerIconFlag = 0x0;
 }
 
-/*
-  Address: 0x800666F0 | size: 0xC8
-  menuIntUnderTakerHook(void* winWork, void* spriteWork)
-  Hook function for UnderTaker icon. Shows/hides based on floor kind and flags.
-*/
-void menuIntUnderTakerHook(void* winWork, void* spriteWork) {
-    winSpriteGetLayerID(spriteWork);
+/* 0x800666F0 | size: 0xC8 */
+// Hook function for UnderTaker icon display
+// r3 = windowWork, r4 = spriteWork
+void menuIntUnderTakerHook(void* windowWork, void* spriteWork)
+{
+    winSpriteGetLayerID();
     GSgfxLayerFindByID(0);
-    void* floor = GSfloorGetCurrent();
-    floorDataBiosGetPtr(floor);
-    s32 floorKind = floorDataBiosGetFloorKind(floor);
+    GSfloorGetCurrent();
+    floorDataBiosGetPtr();
+    int floorKind = floorDataBiosGetFloorKind();
     
     if (_underTakerIconFlag) {
-        void* utData = undertakerdata;
-        s32 flag = ((u32*)utData)[0x24 / 4];
-        
-        if (GSflagTest(flag)) {
-            if (floorKind == 1) {
-                winSpriteSetDisp(spriteWork, 1);
-                
-                s16 spriteIdx = ((s16*)spriteWork)[3];
-                if (spriteIdx == 0x65C) {
-                    if (((u8*)winWork)[1] != 0) {
-                        s32 alpha = _menuIntGetAlpha2__Fv();
-                        ((u8*)spriteWork)[0x67] = (u8)alpha;
+        if (GSflagTest(0x24 + *(int*)((u32)undertakerdata + 0x24))) {
+            if (floorKind == 0x1) {
+                winSpriteSetDisp(spriteWork, 0x1);
+                if (*(s16*)((u32)spriteWork + 0x6) == 0x65c) {
+                    if (*(s8*)((u32)windowWork + 0x1)) {
+                        *(u8*)((u32)spriteWork + 0x67) = _menuIntGetAlpha2();
                     }
                 }
                 return;
             }
         }
     }
-    
-    winSpriteSetDisp(spriteWork, 0);
+    winSpriteSetDisp(spriteWork, 0x0);
 }
 
-/*
-  Address: 0x800667B8 | size: 0x98
-  _menuIntGetAlpha2__Fv()
-  Calculates pulsing alpha value using cosine wave.
-  Formula: alpha = ((cos(TWO_PI * frameCount / PERIOD) + 1) * 0.5 * ALPHA_SCALE)
-  Clamped to range [0x32, 0xFF].
-*/
-static s32 _menuIntGetAlpha2__Fv(void) {
-    float value = TWO_PI * _menuIntFrameCount2 / PERIOD;
-    float cosVal = cos(value);
-    cosVal = (s32)cosVal; // frsp - truncate to integer float
+/* 0x800667B8 | size: 0x98 */
+// Calculates alpha value for UnderTaker icon animation
+// Uses cosine wave for fade effect
+u8 _menuIntGetAlpha2(void)
+{
+    float frameCount = _menuIntFrameCount2;
+    float value = (frameCount * @2178) / @2179;
+    float cosResult = cos(value);
+    int alpha = (int)((@2181 + cosResult) * @2182 * @2180);
     
-    float alpha = (cosVal + ONE) * HALF * ALPHA_SCALE;
-    s32 alphaInt = (s32)alpha; // fctiwz
+    if (alpha > 0xff) alpha = 0xff;
+    if (alpha < 0x32) alpha = 0x32;
     
-    if (alphaInt > 0xFF) alphaInt = 0xFF;
-    if (alphaInt < 0x32) alphaInt = 0x32;
-    
-    float dt = timeGetLastFrameSec();
-    _menuIntFrameCount2 += dt;
-    
-    return alphaInt;
+    _menuIntFrameCount2 = frameCount + timeGetLastFrameSec();
+    return (u8)alpha;
 }
 
-/*
-  Address: 0x80066850 | size: 0xB8
-  menuIntUnderTakerMainCtrl(void* winWork)
-  Main control for UnderTaker interrupt. Handles state transitions.
-*/
-s32 menuIntUnderTakerMainCtrl(void* winWork) {
-    s8 state = ((s8*)winWork)[1];
+/* 0x80066850 | size: 0xB8 */
+// Main control for UnderTaker interrupt menu
+// r3 = windowWork
+void menuIntUnderTakerMainCtrl(void* windowWork)
+{
+    s8 state = *(s8*)((u32)windowWork + 0x1);
+    u8 flag = *(u8*)((u32)windowWork + 0x2);
+    int seqId = *(int*)((u32)windowWork + 0x4);
     
-    switch (state) {
-        case 0: {
-            GSsndPlayNow(0x5B4);
-            if (_menuIntVibFlag) {
-                _menuIntVibSet__Fv();
-            }
-            if (((s8*)winWork)[2] == 0) {
-                winSeqSetMenu(winWork, 0x171);
-                ((s8*)winWork)[2] = 1;
-            }
-            _menuIntVibFlag = 1;
-            break;
+    if (state == 0x0) {
+        GSsndPlayNow(0x5b4);
+        if (_menuIntVibFlag) {
+            _menuIntVibSet();
         }
-        case 3: {
-            if (((s8*)winWork)[2] == 0) {
-                winSeqSetMenu(winWork, 0x177);
-                ((s8*)winWork)[2] = 1;
-            }
-            break;
+        if (!flag) {
+            winSeqSetMenu(seqId, 0x171);
+            *(u8*)((u32)windowWork + 0x2) = 0x1;
         }
-        default:
-            break;
+        _menuIntVibFlag = 0x1;
+    } else if (state == 0x3) {
+        if (!flag) {
+            winSeqSetMenu(seqId, 0x177);
+            *(u8*)((u32)windowWork + 0x2) = 0x1;
+        }
     }
-    
-    return 0;
 }
 
-/*
-  Address: 0x80066908 | size: 0x128
-  menuIntHook(void* winWork, void* spriteWork)
-  Hook for interrupt icons. Handles display based on sprite index and game state.
-  Sprite indices: 0x4BE (mail), 0x505 (phone), 0x507 (BA)
-*/
-void menuIntHook(void* winWork, void* spriteWork) {
-    s16 spriteIdx = ((s16*)spriteWork)[3];
-    void* data = ((void**)winWork)[0x68 / 4];
-    s32 state = ((u32*)data)[0];
+/* 0x80066908 | size: 0x128 */
+// Hook function for interrupt menu
+// r3 = windowWork, r4 = spriteWork
+void menuIntHook(void* windowWork, void* spriteWork)
+{
+    s16 spriteId = *(s16*)((u32)spriteWork + 0x6);
+    int* ptr = (int*)((u32)windowWork + 0x68);
+    int value = *ptr;
     
-    if (spriteIdx == 0x4BE) {
-        // Mail icon
-        if (state == 0) {
-            winSpriteSetDisp(spriteWork, 0);
+    if (spriteId == 0x4be) {
+        if (value) {
+            winSpriteSetDisp(spriteWork, 0x0);
         } else {
-            winSpriteSetDisp(spriteWork, 1);
-            if (((u8*)winWork)[1] != 0) {
-                s32 alpha = _menuIntGetAlpha__Fv();
-                ((u8*)spriteWork)[0x67] = (u8)alpha;
+            winSpriteSetDisp(spriteWork, 0x1);
+            if (*(s8*)((u32)windowWork + 0x1)) {
+                *(u8*)((u32)spriteWork + 0x67) = _menuIntGetAlpha();
             }
         }
-    } else if (spriteIdx == 0x505) {
-        // Phone icon
-        if (state == 1) {
-            winSpriteSetDisp(spriteWork, 0);
+    } else if (spriteId == 0x505) {
+        if (value == 0x1) {
+            winSpriteSetDisp(spriteWork, 0x1);
+            if (*(s8*)((u32)windowWork + 0x1)) {
+                *(u8*)((u32)spriteWork + 0x67) = _menuIntGetAlpha();
+            }
         } else {
-            winSpriteSetDisp(spriteWork, 1);
-            if (((u8*)winWork)[1] != 0) {
-                s32 alpha = _menuIntGetAlpha__Fv();
-                ((u8*)spriteWork)[0x67] = (u8)alpha;
-            }
+            winSpriteSetDisp(spriteWork, 0x0);
         }
-    } else if (spriteIdx >= 0x507) {
-        // BA icon
-        if (state == 2) {
-            winSpriteSetDisp(spriteWork, 0);
+    } else if (spriteId >= 0x507 && spriteId < 0x505) {
+        if (value == 0x2) {
+            winSpriteSetDisp(spriteWork, 0x1);
+            if (*(s8*)((u32)windowWork + 0x1)) {
+                *(u8*)((u32)spriteWork + 0x67) = _menuIntGetAlpha();
+            }
         } else {
-            winSpriteSetDisp(spriteWork, 1);
-            if (((u8*)winWork)[1] != 0) {
-                s32 alpha = _menuIntGetAlpha__Fv();
-                ((u8*)spriteWork)[0x67] = (u8)alpha;
-            }
+            winSpriteSetDisp(spriteWork, 0x0);
         }
     }
 }
 
-/*
-  Address: 0x80066A30 | size: 0x98
-  _menuIntGetAlpha__Fv()
-  Calculates pulsing alpha value using cosine wave (same as GetAlpha2, different counter).
-*/
-static s32 _menuIntGetAlpha__Fv(void) {
-    float value = TWO_PI * _menuIntFrameCount / PERIOD;
-    float cosVal = cos(value);
-    cosVal = (s32)cosVal; // frsp
+/* 0x80066A30 | size: 0x98 */
+// Calculates alpha value for interrupt menu animation
+// Uses cosine wave for fade effect
+u8 _menuIntGetAlpha(void)
+{
+    float frameCount = _menuIntFrameCount;
+    float value = (frameCount * @2178) / @2179;
+    float cosResult = cos(value);
+    int alpha = (int)((@2181 + cosResult) * @2182 * @2180);
     
-    float alpha = (cosVal + ONE) * HALF * ALPHA_SCALE;
-    s32 alphaInt = (s32)alpha; // fctiwz
+    if (alpha > 0xff) alpha = 0xff;
+    if (alpha < 0x32) alpha = 0x32;
     
-    if (alphaInt > 0xFF) alphaInt = 0xFF;
-    if (alphaInt < 0x32) alphaInt = 0x32;
-    
-    float dt = timeGetLastFrameSec();
-    _menuIntFrameCount += dt;
-    
-    return alphaInt;
+    _menuIntFrameCount = frameCount + timeGetLastFrameSec();
+    return (u8)alpha;
 }
 
-/*
-  Address: 0x80066AC8 | size: 0x44
-  menuIntButton(void* winWork)
-  Button handler for interrupt icons. Triggers normal button if no movement.
-*/
-void menuIntButton(void* winWork) {
-    if (winSeqCheckMove(winWork, 0) == 0) {
-        menuButtonNormal(winWork);
+/* 0x80066AC8 | size: 0x44 */
+// Button handler for interrupt menu
+// r3 = windowWork
+void menuIntButton(void* windowWork)
+{
+    int seqId = *(int*)((u32)windowWork + 0x4);
+    if (!winSeqCheckMove(seqId)) {
+        menuButtonNormal(windowWork);
     }
 }
 
-/*
-  Address: 0x80066B0C | size: 0xF4
-  menuIntMainCtrl(void* winWork)
-  Main control for interrupt icons. Handles state transitions and sound effects.
-*/
-s32 menuIntMainCtrl(void* winWork) {
-    s8 state = ((s8*)winWork)[1];
-    void* data = ((void**)winWork)[0x68 / 4];
+/* 0x80066B0C | size: 0xF4 */
+// Main control for interrupt menu
+// r3 = windowWork
+void menuIntMainCtrl(void* windowWork)
+{
+    s8 state = *(s8*)((u32)windowWork + 0x1);
+    int* ptr = (int*)((u32)windowWork + 0x68);
+    u8 flag = *(u8*)((u32)windowWork + 0x2);
+    int seqId = *(int*)((u32)windowWork + 0x4);
+    int value = *ptr;
     
-    switch (state) {
-        case 0: {
-            _menuIntVibSet__Fv();
-            
-            s32 dataState = ((u32*)data)[0];
-            s32 sndId = 0;
-            
-            if (dataState == 0) {
-                sndId = 0x566;
-            } else if (dataState == 1) {
-                sndId = 0x564;
-            } else if (dataState == 2) {
-                sndId = 0x565;
-            } else if (dataState >= 3) {
-                // No sound
-            }
-            
-            if (sndId != 0) {
-                GSsndPlayNow(sndId);
-            }
-            
-            if (((s8*)winWork)[2] == 0) {
-                winSeqSetMenu(winWork, 0x171);
-                ((s8*)winWork)[2] = 1;
-            }
-            break;
+    if (state == 0x0) {
+        _menuIntVibSet();
+        int soundId = 0x0;
+        if (value == 0x1) {
+            soundId = 0x564;
+        } else if (value == 0x0) {
+            soundId = 0x566;
+        } else if (value >= 0x1 && value < 0x3) {
+            soundId = 0x565;
         }
-        case 3: {
-            if (((s8*)winWork)[2] == 0) {
-                winSeqSetMenu(winWork, 0x177);
-                ((s8*)winWork)[2] = 1;
-            }
-            break;
+        if (soundId) {
+            GSsndPlayNow(soundId);
         }
-        default:
-            break;
+        if (!flag) {
+            winSeqSetMenu(seqId, 0x171);
+            *(u8*)((u32)windowWork + 0x2) = 0x1;
+        }
+    } else if (state == 0x3) {
+        if (!flag) {
+            winSeqSetMenu(seqId, 0x177);
+            *(u8*)((u32)windowWork + 0x2) = 0x1;
+        }
     }
-    
-    return 0;
 }
 
-/*
-  Address: 0x80066C00 | size: 0x48
-  _menuIntVibSet__Fv()
-  Starts controller vibration if game condition allows.
-  Checks gamedatasaveGetStatus(0, 9) - if returns 0, enables vibration.
-*/
-static void _menuIntVibSet__Fv(void) {
-    s32 status = gamedatasaveGetStatus(0, 9);
-    if (status != 0) {
-        GSinputMotorStart(1, 0, 0xFF, 0x1E, 0);
+/* 0x80066C00 | size: 0x48 */
+// Sets vibration if save status allows
+void _menuIntVibSet(void)
+{
+    if (!gamedatasaveGetStatus(0x0, 0x9)) {
+        GSinputMotorStart(0x1, 0x0, 0xff, 0x1e, 0x0);
     }
 }
